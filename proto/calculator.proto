@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package services; // package อันนี้เป็นของ proto
+
+// build ลงใน project Go *****
+option go_package="./services"; // package อันนี้เป็นของ go
+
+// build service have request and response
+// service หรือ func ใน go ที่จะเอาไปใช้ จะอยู่ฝั่ง server
+service Calculator {
+
+    // แบบ Unary
+    rpc Hello(HelloRequest) returns(HelloResponse);
+
+    // แบบ Server Streaming
+    // response แบบ streaming ตรง return จะใส streaming
+    rpc Fibonacci(FibonacciRequest) returns(stream FibonacciResponse);
+
+    // แบบ Client Streaming
+    rpc Average(stream AverageRequest) returns(AverageResponse);
+
+    // แบบ Bi Direction Streaming
+    rpc Sum(stream SumRequest) returns(stream SumResponse);
+}
+
+// Sum
+message SumRequest{
+    int32 number = 1;
+}
+message SumResponse{
+    int32 result = 1;
+}
+
+// Average
+message AverageRequest{
+    double number = 1;
+}
+
+message AverageResponse{
+    double result = 1;
+}
+
+// Fibonacci Request
+message FibonacciRequest{
+    uint32 n = 1;
+}
+
+// Fibonacci Response
+message FibonacciResponse{
+    uint32 Result = 1;
+}
+
+// request / parameter /  อยากให้ส่งอะไรมาให้เรา
+message HelloRequest {
+    // กำหนด tag ด้วย ในนี้กำหนด 1 ***
+string name =1;
+google.protobuf.Timestamp created_date = 9;
+}
+
+// response / return / อยากให้ตอบอะไรกลับไป
+message HelloResponse {
+     // กำหนด tag ด้วย ในนี้กำหนด 1 ***
+string result =1;
+}
